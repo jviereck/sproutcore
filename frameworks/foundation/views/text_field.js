@@ -100,6 +100,8 @@ SC.TextFieldView = SC.FieldView.extend(SC.StaticLayout, SC.Editable,
   
   _isFocused: NO,
   
+  _ignoreBlur: null,
+  
   /** 
     This is temporary , until we fix touch for textfields.
   */
@@ -518,7 +520,9 @@ SC.TextFieldView = SC.FieldView.extend(SC.StaticLayout, SC.Editable,
 
   _textField_fieldDidBlur: function(evt) {
     SC.RunLoop.begin();
+    this._ignoreBlur = true;
     this.fieldDidBlur();
+    this._ignoreBlur = false;
     SC.RunLoop.end();
   },
   
@@ -636,7 +640,10 @@ SC.TextFieldView = SC.FieldView.extend(SC.StaticLayout, SC.Editable,
   // the hint text if needed.
   /** @private */
   didLoseKeyResponderTo: function(keyView) {
-    this.$input()[0].blur() ;
+    // This can be ignored if this event was caused by a blur event.
+    if (SC.none(this._ignoreBlur)) {
+      this.$input()[0].blur() ;
+    }
   },
 
   parentViewDidResize: function() {
