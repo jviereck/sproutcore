@@ -475,6 +475,8 @@ SC.RootResponder = SC.RootResponder.extend(
         evt.which = evt.keyCode;
         ret = this.sendEvent('keyDown', evt);
 
+        if (!ret) ret = !this.attemptKeyEquivalent(evt);
+
         // In the case of the BACKSPACE key, we have to check if we are allowed
         // to go back to the previous page or this should be suppressed.
         if (evt.keyCode == 8) {
