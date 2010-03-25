@@ -443,14 +443,14 @@ SC.RootResponder = SC.RootResponder.extend(
       // processing.
 
       ret = this.sendEvent('keyDown', evt) ;
-      
-      // attempt key equivalent if key not handled
-      if (!ret) {
-        ret = !this.attemptKeyEquivalent(evt) ;
-      } else {
-        ret = evt.hasCustomEventHandling ;
-        if (ret) forceBlock = NO ; // code asked explicitly to let delete go
+
+      if (evt.hasCustomEventHandling) {
+        ret = true ;
+        forceBlock = false ;
       }
+
+      // attempt key equivalent if key not handled
+      if (!ret) ret = !this.attemptKeyEquivalent(evt) ;
     }
 
     return forceBlock ? NO : ret ; 
@@ -475,15 +475,16 @@ SC.RootResponder = SC.RootResponder.extend(
         evt.which = evt.keyCode;
         ret = this.sendEvent('keyDown', evt);
 
+        ret = ret === true || evt.hasCustomEventHandling;
+
         if (!ret) ret = !this.attemptKeyEquivalent(evt);
 
         // In the case of the BACKSPACE key, we have to check if we are allowed
         // to go back to the previous page or this should be suppressed.
-        if (evt.keyCode == 8) {
-          ret = ret ? (SC.allowsBackspaceToPreviousPage || evt.hasCustomEventHandling) : YES;
-        } else {
-          ret = ret ? evt.hasCustomEventHandling : YES;
+        if (evt.keyCode === 8) {
+            ret = ret && SC.allowsBackspaceToPreviousPage;
         }
+
         return ret;
 
         // Check for command keys (like ctrl_c, ctrl_z...).
