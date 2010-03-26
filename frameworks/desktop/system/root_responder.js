@@ -484,7 +484,10 @@ SC.RootResponder = SC.RootResponder.extend(
         // In the case of the BACKSPACE key, we have to check if we are allowed
         // to go back to the previous page or this should be suppressed.
         if (evt.keyCode === 8) {
-            ret = ret && SC.allowsBackspaceToPreviousPage;
+            var target = evt.target || evt.srcElement ;
+            if (target === document.body) {
+                ret = ret && SC.allowsBackspaceToPreviousPage;
+            }
         }
 
         return ret;
