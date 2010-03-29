@@ -371,7 +371,7 @@ SC.RootResponder = SC.RootResponder.extend(
     if (evt.shiftKey !== m.shift) { m.shift = evt.shiftKey; changed=true;}
     evt.modifiers = m; // save on event
     
-    return (changed) ? (this.sendEvent('flagsChanged', evt) ? evt.hasCustomEventHandling : YES) : YES ;
+    return (changed) ? (this.sendEvent('flagsChanged', evt) ? !!evt.hasCustomEventHandling : YES) : YES ;
   },
   
   /** @private
@@ -423,7 +423,7 @@ SC.RootResponder = SC.RootResponder.extend(
         return true;
       }
     }
-    
+
     // modifier keys are handled separately by the 'flagsChanged' event
     // send event for modifier key changes, but only stop processing if this 
     // is only a modifier change
@@ -448,7 +448,7 @@ SC.RootResponder = SC.RootResponder.extend(
       if (!ret && !evt.hasCustomEventHandling) {
         ret = !this.attemptKeyEquivalent(evt) ;
       } else {
-        ret = evt.hasCustomEventHandling ;
+        ret = !!evt.hasCustomEventHandling ;
         if (ret) forceBlock = NO ; // code asked explicitly to let delete go
       }
     }
@@ -476,9 +476,9 @@ SC.RootResponder = SC.RootResponder.extend(
         ret = this.sendEvent('keyDown', evt);
 
         if (!ret && !evt.hasCustomEventHandling) {
-          ret = !this.attemptKeyEquivalent(evt) ;
+          ret = !this.attemptKeyEquivalent(evt);
         } else {
-          ret = evt.hasCustomEventHandling ;
+          ret = !!evt.hasCustomEventHandling;
         }
 
         // In the case of the BACKSPACE key, we have to check if we are allowed
@@ -499,13 +499,13 @@ SC.RootResponder = SC.RootResponder.extend(
       } else if ((evt.ctrlKey || evt.metaKey) && SC.PRINTABLE_KEYS_CHARCODE[evt.charCode]){
         evt.keyCode = SC.PRINTABLE_KEYS_CHARCODE[evt.charCode];
         evt.charCode = 0;
-        return this.sendEvent('keyDown', evt) ? evt.hasCustomEventHandling : YES;
+        return this.sendEvent('keyDown', evt) ? !!evt.hasCustomEventHandling : YES;
       }
     }
 
     // normal processing: send keyDown for printable keys.
     if (evt.charCode !== undefined && evt.charCode === 0) return YES;
-    return this.sendEvent('keyDown', evt) ? evt.hasCustomEventHandling:YES;
+    return this.sendEvent('keyDown', evt) ? !!evt.hasCustomEventHandling:YES;
   },
   
   keyup: function(evt) {
@@ -523,7 +523,7 @@ SC.RootResponder = SC.RootResponder.extend(
       this.sendEvent('keyDown', evt);
       this._IMEInputON = NO;
     } 
-    return this.sendEvent('keyUp', evt) ? evt.hasCustomEventHandling:YES;
+    return this.sendEvent('keyUp', evt) ? !!evt.hasCustomEventHandling : YES;
   },
   
   /**
@@ -603,7 +603,7 @@ SC.RootResponder = SC.RootResponder.extend(
       throw e;
     }
     
-    return view ? evt.hasCustomEventHandling : YES;
+    return view ? !!evt.hasCustomEventHandling : YES;
   },
   
   /**
@@ -664,7 +664,7 @@ SC.RootResponder = SC.RootResponder.extend(
       this._drag = null; this._mouseCanDrag = NO; this._mouseDownView = null ;
       throw e;
     }
-    return (handler) ? evt.hasCustomEventHandling : YES ;
+    return (handler) ? !!evt.hasCustomEventHandling : YES ;
   },
   
   dblclick: function(evt){
@@ -682,7 +682,7 @@ SC.RootResponder = SC.RootResponder.extend(
     } catch (e) {
       throw e;
     }
-    return (handler) ? evt.hasCustomEventHandling : YES ;
+    return (handler) ? !!evt.hasCustomEventHandling : YES ;
   },
   
   _lastHovered: null,
