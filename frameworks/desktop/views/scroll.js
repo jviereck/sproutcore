@@ -973,16 +973,17 @@ SC.ScrollView = SC.View.extend(SC.Border, {
     }
 
     if (container && !SC.browser.touch) {
-      container = container.$()[0];
+      var custom = container.get('hasCustomScrolling');
+      var layer = container.get('layer');
       
       if (container) {
         if (verticalScrollOffset !== this._verticalScrollOffset) {
-          container.scrollTop = verticalScrollOffset;
+          if (!custom) layer.scrollTop = verticalScrollOffset;
           this._verticalScrollOffset = verticalScrollOffset;
         }
 
         if (horizontalScrollOffset !== this._horizontalScrollOffset) {
-          container.scrollLeft = horizontalScrollOffset;
+          if (!custom) layer.scrollLeft = horizontalScrollOffset;
           this._horizontalScrollOffset = horizontalScrollOffset;
         }
       }
