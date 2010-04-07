@@ -582,6 +582,10 @@ SC.RootResponder = SC.RootResponder.extend(
 
       var fr, view = this.targetViewForEvent(evt) ;
 
+      if (view === undefined) {
+        return YES;
+      }
+
       // InlineTextField needs to loose firstResponder whenever you click outside
       // the view. This is a special case as textfields are not supposed to loose 
       // focus unless you click on a list, another textfield or an special
@@ -677,8 +681,11 @@ SC.RootResponder = SC.RootResponder.extend(
   
   mousewheel: function(evt) {
     try {
-      var view = this.targetViewForEvent(evt) ,
-          handler = this.sendEvent('mouseWheel', evt, view) ;
+      var view = this.targetViewForEvent(evt);
+      if (view === undefined) {
+        return YES;
+      }
+      var handler = this.sendEvent('mouseWheel', evt, view) ;
     } catch (e) {
       throw e;
     }
